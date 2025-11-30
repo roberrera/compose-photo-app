@@ -35,7 +35,6 @@ class MainActivity : ComponentActivity() {
             ResyTakeHomeTheme {
                 val navController = rememberNavController()
                 val backStackEntry by navController.currentBackStackEntryAsState()
-                // Get the current route to determine if we should show the TopAppBar
                 val currentRoute = backStackEntry?.destination?.route
 
                 Scaffold(

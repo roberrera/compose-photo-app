@@ -1,9 +1,12 @@
 package com.roberrera.resytakehome.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,23 +33,35 @@ fun PhotoDetailsScreen(width: Int, height: Int, id: Int, filename: String, viewM
         viewModel.fetchPhotoById(width,height,id)
     }
 
-    Box(modifier = Modifier.fillMaxWidth().height(height.dp), contentAlignment = Alignment.Center) {
+    /**
+     * If the image is landscape orientation, display it centered. If it's portroit orientation,
+     * display it at the top.
+     */
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment =
+            if(height < width) {
+                Alignment.Center
+            } else {
+                Alignment.TopCenter
+            }
+    ) {
         if (selectedPhotoUrl != null) {
-            // Display the image from the returned image file URL
-            AsyncImage(
-                modifier = Modifier.fillMaxWidth(),
-                model = selectedPhotoUrl,
-                contentDescription = filename
-            )
-            Box(
-                modifier = Modifier.fillMaxWidth()
-                    .height(height.dp),
-                contentAlignment = Alignment.BottomStart
-            ) {
-                Text(
-                    modifier = Modifier.padding(8.dp),
-                    text = filename
+            Column {
+                // Display the image from the returned image file URL
+                AsyncImage(
+                    modifier = Modifier
+                        .width(width.dp),
+                    model = selectedPhotoUrl,
+                    contentDescription = filename
                 )
+                Box(modifier = Modifier.padding(8.dp),
+                    contentAlignment = Alignment.BottomStart
+                ) {
+                    Text(
+                        text = filename
+                    )
+                }
             }
         } else {
             // Display the loading state
@@ -66,12 +81,10 @@ fun PhotoDetailPreview() {
         alignment = Alignment.Center
     )
     Box(
-        modifier = Modifier.fillMaxWidth()
-            .height(250.dp),
+        modifier = Modifier.padding(8.dp),
         contentAlignment = Alignment.BottomStart
     ) {
         Text(
-            modifier = Modifier.padding(8.dp),
             text = "filename.jpeg"
         )
     }

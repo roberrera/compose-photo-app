@@ -24,11 +24,13 @@ class PhotosViewModel @Inject constructor(
 
     fun fetchPhotos() {
         viewModelScope.launch {
-            _isLoading.value = true
-            try {
-                _photos.value = repository.fetchPhotos()
-            } finally {
-                _isLoading.value = false
+            if (photos.value?.isEmpty() == true) {
+                _isLoading.value = true
+                try {
+                    _photos.value = repository.fetchPhotos()
+                } finally {
+                    _isLoading.value = false
+                }
             }
         }
     }
