@@ -2,20 +2,17 @@ package com.roberrera.resytakehome.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.roberrera.resytakehome.model.PhotosViewModel
 
 @Composable
 fun ResyTakeHomeNavigation(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val photosViewModel: PhotosViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,
@@ -24,7 +21,6 @@ fun ResyTakeHomeNavigation(
     ) {
         composable(route = "photosList") {
             PhotosListScreen(
-                viewModel = photosViewModel,
                 onPhotoClick = { photo ->
                     navController.navigate(
                         "photoDetails/${photo.width}/${photo.height}/${photo.id}/${photo.author}"
@@ -50,8 +46,7 @@ fun ResyTakeHomeNavigation(
                     width,
                     height,
                     photoId,
-                    authorName,
-                    photosViewModel
+                    authorName
                 )
             }
         }

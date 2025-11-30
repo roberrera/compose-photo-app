@@ -20,18 +20,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.roberrera.resytakehome.model.PhotosViewModel
 import com.roberrera.resytakehome.network.Photo
 
 @Composable
-fun PhotosListScreen(viewModel: PhotosViewModel, onPhotoClick: (Photo) -> Unit) {
+fun PhotosListScreen(onPhotoClick: (Photo) -> Unit) {
 
-    val photos by viewModel.photos.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
+    val photosViewModel: PhotosViewModel = hiltViewModel()
+    val photos by photosViewModel.photos.collectAsState()
+    val isLoading by photosViewModel.isLoading.collectAsState()
     val scrollState = rememberLazyListState()
 
     LaunchedEffect(true) {
-        viewModel.fetchPhotos()
+        photosViewModel.fetchPhotos()
     }
 
     if (isLoading) {
@@ -45,20 +47,18 @@ fun PhotosListScreen(viewModel: PhotosViewModel, onPhotoClick: (Photo) -> Unit) 
             state = scrollState
         ) {
             items(items = photos ?: emptyList()) { photo ->
-                if (photo != null) {
-                    PhotoRow(photo = photo, onPhotoClick = { onPhotoClick(photo) })
-                }
+                photo?.let { PhotoRow(photo = it, onPhotoClick = { onPhotoClick(it) }) }
             }
         }
     }
 }
 
 @Composable
-fun PhotoRow(photo: Photo, onPhotoClick: () -> Unit) {
+fun PhotoRow(photo: Photo, onPhotoClick: (() -> Unit)?) {
     Box(
         modifier = Modifier.fillMaxWidth()
             .height(48.dp)
-            .clickable(onClick = onPhotoClick),
+            .clickable(onClick = { onPhotoClick?.invoke() }),
         contentAlignment = Alignment.CenterStart
     ) {
         Text(
@@ -80,5 +80,32 @@ fun PhotoRowPreview() {
             modifier = Modifier.padding(8.dp),
             text = "filename.jpeg"
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PhotoRowListPreview() {
+    val photoObject = Photo(
+        id = 1,
+        author = "",
+        width = 0,
+        height = 0,
+        fileName = "",
+        authorUrl = "",
+        postUrl = ""
+    )
+    val photos = listOf(
+        photoObject.copy(fileName = "0.jpeg"),
+        photoObject.copy(fileName = "1.jpeg"),
+        photoObject.copy(fileName = "2.jpeg"),
+        photoObject.copy(fileName = "3.jpeg"),
+        photoObject.copy(fileName = "4.jpeg")
+    )
+
+    LazyColumn {
+        items(items = photos) {
+            PhotoRow(photo = it, onPhotoClick = null)
+        }
     }
 }

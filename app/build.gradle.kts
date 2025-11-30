@@ -62,8 +62,6 @@ dependencies {
     implementation(libs.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
     implementation(libs.okhttp3.interceptor)
 
     implementation(libs.kotlinx.serialization.json)
@@ -71,7 +69,6 @@ dependencies {
     implementation(libs.retrofit.converters.kotlinx.serialization)
 
     testImplementation(libs.junit)
-    testImplementation(libs.coil.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
