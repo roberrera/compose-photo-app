@@ -15,8 +15,8 @@ class PhotoRepository @Inject constructor() {
         return if (request.isSuccessful) {
             request.body()?: emptyList()
         } else {
+            Log.e("Error", request.errorBody().toString())
             null
-            // todo: handle error case
         }
     }
 
@@ -31,12 +31,12 @@ class PhotoRepository @Inject constructor() {
             id = id
         )
         return if (request.isSuccessful) {
-            val response: String? = request.body()?.string()
-            // The response returns a file URL with a device query after. We don't need the query.
-            response?.substringBefore("?")
+            // The response gives us an image URL, so we can just return the raw URL string and
+            // let Coil process it to display it as an image.
+            request.raw().request.url.toString()
         } else {
             Log.e("Error", request.errorBody().toString())
-            ""
+            null
         }
     }
 

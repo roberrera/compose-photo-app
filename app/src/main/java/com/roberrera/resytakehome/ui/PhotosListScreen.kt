@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,19 +27,26 @@ import com.roberrera.resytakehome.network.Photo
 fun PhotosListScreen(viewModel: PhotosViewModel, onPhotoClick: (Photo) -> Unit) {
 
     val photos by viewModel.photos.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     LaunchedEffect(true) {
         viewModel.fetchPhotos()
     }
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp)
-    ) {
-        items(items = photos ?: emptyList()) { photo ->
-            if (photo != null) {
-                Log.d("PhotosListScreen", "Photo: ${photo.fileName}")
-                PhotoRow(photo = photo, onPhotoClick = { onPhotoClick(photo) })
+    if (isLoading) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(16.dp)
+        ) {
+            items(items = photos ?: emptyList()) { photo ->
+                if (photo != null) {
+                    Log.d("PhotosListScreen", "Photo: ${photo.fileName}")
+                    PhotoRow(photo = photo, onPhotoClick = { onPhotoClick(photo) })
+                }
             }
         }
     }
