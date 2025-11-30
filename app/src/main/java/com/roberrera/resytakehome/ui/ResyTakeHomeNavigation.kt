@@ -27,30 +27,30 @@ fun ResyTakeHomeNavigation(
                 viewModel = photosViewModel,
                 onPhotoClick = { photo ->
                     navController.navigate(
-                        "photoDetails/${photo.width}/${photo.height}/${photo.id}/${photo.fileName}"
+                        "photoDetails/${photo.width}/${photo.height}/${photo.id}/${photo.author}"
                     )
                 }
             )
         }
         composable(
-            "photoDetails/{width}/{height}/{id}/{filename}",
+            "photoDetails/{width}/{height}/{id}/{author}",
             arguments = listOf(
                 navArgument("width") { type = NavType.IntType },
                 navArgument("height") { type = NavType.IntType },
                 navArgument("id") { type = NavType.IntType },
-                navArgument("filename") { type = NavType.StringType }
+                navArgument("author") { type = NavType.StringType }
             )
         ) { backStackEntry ->
             val photoId = backStackEntry.arguments?.getInt("id")
             val width = backStackEntry.arguments?.getInt("width") ?: 0
             val height = backStackEntry.arguments?.getInt("height") ?: 0
-            val filename = backStackEntry.arguments?.getString("filename") ?: ""
+            val authorName = backStackEntry.arguments?.getString("author") ?: ""
             if (photoId != null) {
                 PhotoDetailsScreen(
                     width,
                     height,
                     photoId,
-                    filename,
+                    authorName,
                     photosViewModel
                 )
             }

@@ -21,7 +21,7 @@ import coil3.compose.AsyncImage
 import com.roberrera.resytakehome.model.PhotosViewModel
 
 @Composable
-fun PhotoDetailsScreen(width: Int, height: Int, id: Int, filename: String, viewModel: PhotosViewModel) {
+fun PhotoDetailsScreen(width: Int, height: Int, id: Int, authorName: String, viewModel: PhotosViewModel) {
     val selectedPhotoUrl by viewModel.selectedPhotoUrl.collectAsState()
 
     /**
@@ -53,13 +53,13 @@ fun PhotoDetailsScreen(width: Int, height: Int, id: Int, filename: String, viewM
                     modifier = Modifier
                         .width(width.dp),
                     model = selectedPhotoUrl,
-                    contentDescription = filename
+                    contentDescription = "Image by $authorName"
                 )
                 Box(modifier = Modifier.padding(8.dp),
                     contentAlignment = Alignment.BottomStart
                 ) {
                     Text(
-                        text = filename
+                        text = authorName
                     )
                 }
             }
