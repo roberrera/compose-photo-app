@@ -21,16 +21,25 @@ class PhotosViewModel @Inject constructor(
     var selectedPhotoUrl: StateFlow<String?> = _selectedPhotoUrl.asStateFlow()
     private var _isLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     var isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    private var _pageNumber: MutableStateFlow<Int> = MutableStateFlow(0)
 
     fun fetchPhotos() {
+        // Guard against multiple simultaneous requests
+        if (isLoading.value) return
+
         viewModelScope.launch {
-            if (photos.value?.isEmpty() == true) {
-                _isLoading.value = true
-                try {
-                    _photos.value = repository.fetchPhotos()
-                } finally {
-                    _isLoading.value = false
+            _isLoading.value = true
+            try {
+                val nextPageToFetch: Int = _pageNumber.value + 1
+                val newPhotos: List<Photo?>? = repository.fetchPhotos(page = nextPageToFetch)
+
+                if (!newPhotos.isNullOrEmpty()) {
+                    val fetchedPhotos = _photos.value ?: emptyList()
+                    _photos.value = fetchedPhotos + newPhotos
+                    _pageNumber.value = nextPageToFetch
                 }
+            } finally {
+                _isLoading.value = false
             }
         }
     }

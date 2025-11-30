@@ -10,8 +10,8 @@ class PhotoRepository @Inject constructor() {
 
     private val apiClient: ApiService = ApiClient.getInstance().create(ApiService::class.java)
 
-    suspend fun fetchPhotos(): List<Photo?>? {
-        val request = apiClient.fetchPhotos()
+    suspend fun fetchPhotos(page: Int): List<Photo?>? {
+        val request = apiClient.fetchPhotos(page = page)
         return if (request.isSuccessful) {
             request.body()?: emptyList()
         } else {
@@ -31,12 +31,12 @@ class PhotoRepository @Inject constructor() {
             id = id
         )
         return if (request.isSuccessful) {
-            // The response gives us an image URL, so we can just return the raw URL string and
-            // let Coil process it to display it as an image.
+            // Instead of a Photo object, the response gives us a raw image URL,
+            // which our image loader can handle.
             request.raw().request.url.toString()
         } else {
             Log.e("Error", request.errorBody().toString())
-            null
+            ""
         }
     }
 

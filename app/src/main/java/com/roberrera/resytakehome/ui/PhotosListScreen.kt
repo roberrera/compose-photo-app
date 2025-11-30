@@ -33,22 +33,47 @@ fun PhotosListScreen(onPhotoClick: (Photo) -> Unit) {
     val isLoading by photosViewModel.isLoading.collectAsState()
     val scrollState = rememberLazyListState()
 
+    // Initial data to load
     LaunchedEffect(true) {
         photosViewModel.fetchPhotos()
     }
 
-    if (isLoading) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+    /** Listen for scroll state changes so we can trigger an update to pagination
+     for requesting more Photos.
+     Unfortunately, the current request ignores the limit query and doesn't return
+     a total item count for us to check our fetch requests against. However, we could utilize
+     this code would if we were to switch to an API that supports pagination.
+    **/
+    LaunchedEffect(scrollState) {
+        val layoutInfo = scrollState.layoutInfo
+        if (!isLoading && layoutInfo.visibleItemsInfo.isNotEmpty()) {
+            val lastVisibleItemIndex = layoutInfo.visibleItemsInfo.last().index
+            val totalItemsCount = layoutInfo.totalItemsCount
+            val threshold = 5
+
+            // Fetch next page when user is near the end of the list, but before the last item
+            // is visible. The threshold can be tweaked if a smoother interaction is needed.
+            if (lastVisibleItemIndex >= totalItemsCount - threshold) {
+                photosViewModel.fetchPhotos()
+            }
         }
-    } else {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            state = scrollState
-        ) {
-            items(items = photos ?: emptyList()) { photo ->
-                photo?.let { PhotoRow(photo = it, onPhotoClick = { onPhotoClick(it) }) }
+    }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp),
+        state = scrollState
+    ) {
+        items(items = photos ?: emptyList()) { photo ->
+            photo?.let { PhotoRow(photo = it, onPhotoClick = { onPhotoClick(it) }) }
+        }
+
+        // Enable loading indicator when fetching the next page of Photos.
+        if (isLoading) {
+            item {
+                Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
             }
         }
     }
