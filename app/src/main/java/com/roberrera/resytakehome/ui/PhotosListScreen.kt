@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -58,13 +59,15 @@ fun PhotoRow(photo: Photo, onPhotoClick: (() -> Unit)?) {
     Box(
         modifier = Modifier.fillMaxWidth()
             .height(48.dp)
-            .clickable(onClick = { onPhotoClick?.invoke() }),
-        contentAlignment = Alignment.CenterStart
+            .clickable(onClick = { onPhotoClick?.invoke() })
     ) {
         Text(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier
+                .padding(8.dp)
+                .align(Alignment.CenterStart),
             text = photo.fileName ?: ""
         )
+        HorizontalDivider(modifier = Modifier.align(Alignment.BottomStart))
     }
 }
 
@@ -73,13 +76,15 @@ fun PhotoRow(photo: Photo, onPhotoClick: (() -> Unit)?) {
 fun PhotoRowPreview() {
     Box(
         modifier = Modifier.fillMaxWidth()
-            .height(48.dp),
-        contentAlignment = Alignment.CenterStart
+            .height(48.dp)
     ) {
         Text(
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier
+                .padding(8.dp)
+                .align(Alignment.CenterStart),
             text = "filename.jpeg"
         )
+        HorizontalDivider(modifier = Modifier.align(Alignment.BottomStart))
     }
 }
 
