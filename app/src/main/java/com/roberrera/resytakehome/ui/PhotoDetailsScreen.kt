@@ -49,7 +49,7 @@ fun PhotoDetailsScreen(width: Int, height: Int, id: Int, authorName: String) {
     val photosViewModel: PhotosViewModel = hiltViewModel()
     val imageLoaderViewModel: ImageLoaderInterfaceViewModel = hiltViewModel()
     val selectedPhotoUrl by photosViewModel.selectedPhotoUrl.collectAsState()
-    val error by photosViewModel.error.collectAsState()
+    val networkError by photosViewModel.error.collectAsState()
     val context = LocalContext.current
 
     LaunchedEffect(id) {
@@ -57,8 +57,8 @@ fun PhotoDetailsScreen(width: Int, height: Int, id: Int, authorName: String) {
         photosViewModel.fetchPhotoById(width, height, id)
     }
 
-    LaunchedEffect(error) {
-        error?.let {
+    LaunchedEffect(networkError) {
+        networkError?.let {
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
             photosViewModel.clearError()
         }
@@ -105,6 +105,8 @@ fun AsyncImageWithCache(
             } else {
                 ImageLoadState.Error
             }
+        } else {
+            imageState = ImageLoadState.Error
         }
     }
 
