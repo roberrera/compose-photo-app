@@ -13,19 +13,17 @@ import java.io.File
 import java.net.URL
 import javax.inject.Inject
 
+/**
+ * The [memoryCache] is an in-memory cache that survives configuration changes.
+ * The [diskCacheDir] is a reference to the app's private cache directory.
+ */
 @HiltViewModel
 class ImageLoaderInterfaceViewModel @Inject constructor(
     application: Application
 ) : ViewModel(), ImageLoaderInterface {
 
-    /**
-     * The [memoryCache] is an in-memory cache that survives configuration changes.
-     */
     private val memoryCache = object : LruCache<String, Bitmap>(50) {}
 
-    /**
-     * The [diskCacheDir] is a reference to the app's private cache directory.
-     */
     private val diskCacheDir = File(
         application.cacheDir,
         "image_cache"

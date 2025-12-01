@@ -1,11 +1,11 @@
 package com.roberrera.resytakehome.ui
 
-import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -35,7 +35,6 @@ import com.roberrera.resytakehome.R
 import com.roberrera.resytakehome.model.ImageLoaderInterface
 import com.roberrera.resytakehome.model.ImageLoaderInterfaceViewModel
 import com.roberrera.resytakehome.model.PhotosViewModel
-import kotlinx.coroutines.delay
 
 private sealed class ImageLoadState {
     object Loading : ImageLoadState()
@@ -49,7 +48,7 @@ fun PhotoDetailsScreen(width: Int, height: Int, id: Int, authorName: String) {
     val photosViewModel: PhotosViewModel = hiltViewModel()
     val imageLoaderViewModel: ImageLoaderInterfaceViewModel = hiltViewModel()
     val selectedPhotoUrl by photosViewModel.selectedPhotoUrl.collectAsState()
-    val networkError by photosViewModel.error.collectAsState()
+    val apiError by photosViewModel.error.collectAsState()
     val context = LocalContext.current
 
     LaunchedEffect(id) {
@@ -57,8 +56,8 @@ fun PhotoDetailsScreen(width: Int, height: Int, id: Int, authorName: String) {
         photosViewModel.fetchPhotoById(width, height, id)
     }
 
-    LaunchedEffect(networkError) {
-        networkError?.let {
+    LaunchedEffect(apiError) {
+        apiError?.let {
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
             photosViewModel.clearError()
         }
@@ -150,29 +149,29 @@ fun AsyncImageWithCache(
 @Preview(name = "Success State", showBackground = true)
 @Composable
 fun AsyncImageSuccessPreview() {
-    val context = LocalContext.current
-    // Create an ImageLoader that returns a placeholder bitmap from drawable resources.
-    val previewImageLoaderInterface = object : ImageLoaderInterface {
-        override suspend fun loadImage(url: String): Bitmap {
-            val drawable = ContextCompat.getDrawable(context, R.drawable.ic_launcher_background)
-            return drawable!!.toBitmap()
-        }
-    }
-    Column(modifier = Modifier
-            .fillMaxSize()
+    Box(modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center) {
+        Column(
+            Modifier.fillMaxWidth()
+            // In case the screen is too short
             .verticalScroll(rememberScrollState())
-    ) {
-        AsyncImageWithCache(
-            url = "fake_url",
-            authorName = "Author name",
-            contentDescription = "Preview Image",
-            imageLoaderInterface = previewImageLoaderInterface
-        )
-        Box(
-            modifier = Modifier.padding(8.dp),
-            contentAlignment = Alignment.BottomStart
         ) {
-            Text(text = "Author name")
+            val drawable = ContextCompat.getDrawable(
+                LocalContext.current,
+                R.drawable.ic_launcher_background
+            )
+            val bitmap = drawable!!.toBitmap()
+            Image(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                bitmap = bitmap.asImageBitmap(),
+                contentDescription = "File name"
+            )
+            Box(
+                modifier = Modifier.padding(8.dp),
+                contentAlignment = Alignment.BottomStart
+            ) {
+                Text(text = "Author name")
+            }
         }
     }
 }
@@ -180,32 +179,19 @@ fun AsyncImageSuccessPreview() {
 @Preview(name = "Loading State", showBackground = true)
 @Composable
 fun AsyncImageLoadingPreview() {
-    val fakeImageLoaderInterface = object : ImageLoaderInterface {
-        override suspend fun loadImage(url: String): Bitmap? {
-            delay(Long.MAX_VALUE)
-            return null
-        }
+    Box(Modifier.fillMaxSize()) {
+        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
     }
-    AsyncImageWithCache(
-        url = "fake_url",
-        authorName = "Author name",
-        contentDescription = "Preview Image",
-        imageLoaderInterface = fakeImageLoaderInterface
-    )
 }
 
 @Preview(name = "Error State", showBackground = true)
 @Composable
 fun AsyncImageErrorPreview() {
-    val fakeImageLoaderInterface = object : ImageLoaderInterface {
-        override suspend fun loadImage(url: String): Bitmap? {
-            return null
-        }
+    Box(Modifier.fillMaxSize()) {
+        Icon(
+            imageVector = Icons.Default.Warning,
+            contentDescription = "Error loading image",
+            modifier = Modifier.align(Alignment.Center)
+        )
     }
-    AsyncImageWithCache(
-        url = "fake_url",
-        authorName = "Author name",
-        contentDescription = "Preview Image",
-        imageLoaderInterface = fakeImageLoaderInterface
-    )
 }

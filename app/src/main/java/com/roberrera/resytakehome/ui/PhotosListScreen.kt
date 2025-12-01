@@ -36,7 +36,7 @@ fun PhotosListScreen(onPhotoClick: (Photo) -> Unit) {
     val photosViewModel: PhotosViewModel = hiltViewModel()
     val photos by photosViewModel.photos.collectAsState()
     val isLoading by photosViewModel.isLoading.collectAsState()
-    val networkError by photosViewModel.error.collectAsState()
+    val apiError by photosViewModel.error.collectAsState()
     val scrollState = rememberLazyListState()
     val context = LocalContext.current
 
@@ -44,8 +44,8 @@ fun PhotosListScreen(onPhotoClick: (Photo) -> Unit) {
         photosViewModel.fetchPhotos()
     }
 
-    LaunchedEffect(networkError) {
-        networkError?.let {
+    LaunchedEffect(apiError) {
+        apiError?.let {
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
             photosViewModel.clearError()
         }
@@ -57,38 +57,23 @@ fun PhotosListScreen(onPhotoClick: (Photo) -> Unit) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
-        networkError != null -> {
+        apiError != null -> {
             Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
                 Icon(
                     imageVector = Icons.Default.Warning,
-                    contentDescription = "Error loading image",
+                    contentDescription = "Error loading images",
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
         }
         else -> {
-            if (photos.isNullOrEmpty()) {
-                Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-                    Icon(
-                        imageVector = Icons.Default.Warning,
-                        contentDescription = "Error loading image",
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                    Toast.makeText(
-                        LocalContext.current,
-                        "Error loading image",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    state = scrollState
-                ) {
-                    items(items = photos ?: emptyList()) { photo ->
-                        photo?.let { PhotoRow(photo = it, onPhotoClick = { onPhotoClick(it) }) }
-                    }
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                state = scrollState
+            ) {
+                items(items = photos ?: emptyList()) { photo ->
+                    photo?.let { PhotoRow(photo = it, onPhotoClick = { onPhotoClick(it) }) }
                 }
             }
         }
