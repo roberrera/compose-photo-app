@@ -7,8 +7,8 @@ import javax.inject.Inject
 
 class PhotoRepository @Inject constructor(private val apiClient: ApiService) {
 
-    suspend fun fetchPhotos(page: Int): List<Photo?>? {
-        val request = apiClient.fetchPhotos(page = page)
+    suspend fun fetchPhotos(): List<Photo?>? {
+        val request = apiClient.fetchPhotos()
         return if (request.isSuccessful) {
             request.body()?: emptyList()
         } else {

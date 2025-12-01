@@ -24,27 +24,18 @@ class PhotosViewModel @Inject constructor(
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
-    private var _pageNumber: MutableStateFlow<Int> = MutableStateFlow(0)
 
     fun fetchPhotos() {
-        // Guard against multiple simultaneous requests
-        if (isLoading.value) return
-
         viewModelScope.launch {
-            _isLoading.value = true
-            try {
-                val nextPageToFetch = _pageNumber.value + 1
-                val newPhotos = repository.fetchPhotos(page = nextPageToFetch)
-
-                if (!newPhotos.isNullOrEmpty()) {
-                    val currentPhotos = _photos.value ?: emptyList()
-                    _photos.value = currentPhotos + newPhotos
-                    _pageNumber.value = nextPageToFetch
+            if (_photos.value.isNullOrEmpty()) {
+                _isLoading.value = true
+                try {
+                    _photos.value = repository.fetchPhotos()
+                } catch (e: NoConnectivityException) {
+                    _error.value = e.message
+                } finally {
+                    _isLoading.value = false
                 }
-            } catch (e: NoConnectivityException) {
-                _error.value = e.message
-            } finally {
-                _isLoading.value = false
             }
         }
     }

@@ -11,13 +11,9 @@ import retrofit2.http.Query
  * This defines the endpoints for fetching Photo data.
  */
 interface ApiService {
-    // NOTE: This call seems to ignore the limit and return all results at once. We can leave this
-    // implementation for now in case pagination gets added.
+    // NOTE: This request does not support pagination.
     @GET("list")
-    suspend fun fetchPhotos(
-        @Query("page") page: Int = 1,
-        @Query("limit") limit: Int = 30
-    ): Response<List<Photo?>?>
+    suspend fun fetchPhotos(): Response<List<Photo?>?>
 
     @GET("{width}/{height}")
     suspend fun fetchPhotoById(
