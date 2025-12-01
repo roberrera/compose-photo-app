@@ -151,8 +151,8 @@ fun AsyncImageWithCache(
 @Composable
 fun AsyncImageSuccessPreview() {
     val context = LocalContext.current
-    // Create a fake ImageLoader that returns a placeholder bitmap from drawable resources.
-    val fakeImageLoaderInterface = object : ImageLoaderInterface {
+    // Create an ImageLoader that returns a placeholder bitmap from drawable resources.
+    val previewImageLoaderInterface = object : ImageLoaderInterface {
         override suspend fun loadImage(url: String): Bitmap {
             val drawable = ContextCompat.getDrawable(context, R.drawable.ic_launcher_background)
             return drawable!!.toBitmap()
@@ -166,7 +166,7 @@ fun AsyncImageSuccessPreview() {
             url = "fake_url",
             authorName = "Author name",
             contentDescription = "Preview Image",
-            imageLoaderInterface = fakeImageLoaderInterface
+            imageLoaderInterface = previewImageLoaderInterface
         )
         Box(
             modifier = Modifier.padding(8.dp),
