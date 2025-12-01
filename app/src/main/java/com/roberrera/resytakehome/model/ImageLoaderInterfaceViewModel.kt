@@ -3,6 +3,7 @@ package com.roberrera.resytakehome.model
 import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.collection.LruCache
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -70,7 +71,7 @@ class ImageLoaderInterfaceViewModel @Inject constructor(
                 memoryCache.put(url, networkBitmap)
                 networkBitmap
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("Exception", e.printStackTrace().toString())
                 null
             }
         }

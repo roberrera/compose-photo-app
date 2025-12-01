@@ -1,6 +1,7 @@
 package com.roberrera.resytakehome.ui
 
 import android.graphics.Bitmap
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,32 +47,32 @@ private sealed class ImageLoadState {
 fun PhotoDetailsScreen(width: Int, height: Int, id: Int, authorName: String) {
 
     val photosViewModel: PhotosViewModel = hiltViewModel()
-    // Get the shared ViewModel that holds the image caching logic.
     val imageLoaderViewModel: ImageLoaderInterfaceViewModel = hiltViewModel()
-    // Get the URL returned from the API request and observe if that URL changes.
     val selectedPhotoUrl by photosViewModel.selectedPhotoUrl.collectAsState()
+    val error by photosViewModel.error.collectAsState()
+    val context = LocalContext.current
 
-    /**
-     * Clear the previously loaded photo URL and request the new image. This ensures we don't see
-     * the previous image during the loading state.
-     */
     LaunchedEffect(id) {
         photosViewModel.clearSelectedPhotoUrl()
         photosViewModel.fetchPhotoById(width, height, id)
     }
 
+    LaunchedEffect(error) {
+        error?.let {
+            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+            photosViewModel.clearError()
+        }
+    }
+
     Box(
         modifier = Modifier.fillMaxSize(),
-        // Implement image alignment logic
         contentAlignment = if (height < width) Alignment.Center else Alignment.TopCenter
     ) {
         if (selectedPhotoUrl != null) {
-            // Display the image from the returned image file URL
-            ManualAsyncImageWithCache(
+            AsyncImageWithCache(
                 url = selectedPhotoUrl!!,
                 authorName = authorName,
                 contentDescription = "Image by $authorName",
-                // Pass the view model, which implements the ImageLoaderInterface.
                 imageLoaderInterface = imageLoaderViewModel
             )
         } else {
@@ -85,13 +86,15 @@ fun PhotoDetailsScreen(width: Int, height: Int, id: Int, authorName: String) {
  * implementation.
  */
 @Composable
-fun ManualAsyncImageWithCache(
+fun AsyncImageWithCache(
     url: String,
     authorName: String,
     contentDescription: String?,
     imageLoaderInterface: ImageLoaderInterface
 ) {
-    var imageState by remember(url) { mutableStateOf<ImageLoadState>(ImageLoadState.Loading) }
+    var imageState by remember(url) {
+        mutableStateOf<ImageLoadState>(ImageLoadState.Loading)
+    }
 
     LaunchedEffect(url) {
         if (url.isNotBlank()) {
@@ -121,9 +124,7 @@ fun ManualAsyncImageWithCache(
                         modifier = Modifier.padding(8.dp),
                         contentAlignment = Alignment.BottomStart
                     ) {
-                        Text(
-                            text = authorName
-                        )
+                        Text(text = authorName)
                     }
                 }
             }
@@ -133,6 +134,11 @@ fun ManualAsyncImageWithCache(
                     contentDescription = "Error loading image",
                     modifier = Modifier.align(Alignment.Center)
                 )
+                Toast.makeText(
+                    LocalContext.current,
+                    "Error loading image",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -141,7 +147,7 @@ fun ManualAsyncImageWithCache(
 
 @Preview(name = "Success State", showBackground = true)
 @Composable
-fun PhotoDetailPreview_Success() {
+fun AsyncImageSuccessPreview() {
     val context = LocalContext.current
     // Create a fake ImageLoader that returns a placeholder bitmap from drawable resources.
     val fakeImageLoaderInterface = object : ImageLoaderInterface {
@@ -154,7 +160,7 @@ fun PhotoDetailPreview_Success() {
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        ManualAsyncImageWithCache(
+        AsyncImageWithCache(
             url = "fake_url",
             authorName = "Author name",
             contentDescription = "Preview Image",
@@ -164,23 +170,21 @@ fun PhotoDetailPreview_Success() {
             modifier = Modifier.padding(8.dp),
             contentAlignment = Alignment.BottomStart
         ) {
-            Text(
-                text = "Author name"
-            )
+            Text(text = "Author name")
         }
     }
 }
 
 @Preview(name = "Loading State", showBackground = true)
 @Composable
-fun PhotoDetailPreview_Loading() {
+fun AsyncImageLoadingPreview() {
     val fakeImageLoaderInterface = object : ImageLoaderInterface {
         override suspend fun loadImage(url: String): Bitmap? {
-            delay(Long.MAX_VALUE) // Simulates indefinite loading
+            delay(Long.MAX_VALUE)
             return null
         }
     }
-    ManualAsyncImageWithCache(
+    AsyncImageWithCache(
         url = "fake_url",
         authorName = "Author name",
         contentDescription = "Preview Image",
@@ -190,13 +194,13 @@ fun PhotoDetailPreview_Loading() {
 
 @Preview(name = "Error State", showBackground = true)
 @Composable
-fun PhotoDetailPreview_Error() {
+fun AsyncImageErrorPreview() {
     val fakeImageLoaderInterface = object : ImageLoaderInterface {
         override suspend fun loadImage(url: String): Bitmap? {
-            return null // Simulates a network error
+            return null
         }
     }
-    ManualAsyncImageWithCache(
+    AsyncImageWithCache(
         url = "fake_url",
         authorName = "Author name",
         contentDescription = "Preview Image",

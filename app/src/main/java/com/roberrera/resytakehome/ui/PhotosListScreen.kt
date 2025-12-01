@@ -1,5 +1,6 @@
 package com.roberrera.resytakehome.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -31,19 +33,27 @@ fun PhotosListScreen(onPhotoClick: (Photo) -> Unit) {
     val photosViewModel: PhotosViewModel = hiltViewModel()
     val photos by photosViewModel.photos.collectAsState()
     val isLoading by photosViewModel.isLoading.collectAsState()
+    val error by photosViewModel.error.collectAsState()
     val scrollState = rememberLazyListState()
+    val context = LocalContext.current
 
-    // Initial data to load
     LaunchedEffect(true) {
         photosViewModel.fetchPhotos()
     }
 
+    LaunchedEffect(error) {
+        error?.let {
+            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+            photosViewModel.clearError()
+        }
+    }
+
     /** Listen for scroll state changes so we can trigger an update to pagination
-     for requesting more Photos.
-     Unfortunately, the current request ignores the limit query and doesn't return
-     a total item count for us to check our fetch requests against. However, we could utilize
-     this code would if we were to switch to an API that supports pagination.
-    **/
+    for requesting more Photos.
+    Unfortunately, the current request ignores the limit query and doesn't return
+    a total item count for us to check our fetch requests against. However, we could utilize
+    this code would if we were to switch to an API that supports pagination.
+     **/
     LaunchedEffect(scrollState) {
         val layoutInfo = scrollState.layoutInfo
         if (!isLoading && layoutInfo.visibleItemsInfo.isNotEmpty()) {

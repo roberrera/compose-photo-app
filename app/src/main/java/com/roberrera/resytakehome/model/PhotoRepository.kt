@@ -1,14 +1,11 @@
 package com.roberrera.resytakehome.model
 
 import android.util.Log
-import com.roberrera.resytakehome.network.ApiClient
 import com.roberrera.resytakehome.network.ApiService
 import com.roberrera.resytakehome.network.Photo
 import javax.inject.Inject
 
-class PhotoRepository @Inject constructor() {
-
-    private val apiClient: ApiService = ApiClient.getInstance().create(ApiService::class.java)
+class PhotoRepository @Inject constructor(private val apiClient: ApiService) {
 
     suspend fun fetchPhotos(page: Int): List<Photo?>? {
         val request = apiClient.fetchPhotos(page = page)
