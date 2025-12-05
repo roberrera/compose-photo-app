@@ -1,4 +1,4 @@
-package com.roberrera.resytakehome.network
+package com.roberrera.composephotoapp.network
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

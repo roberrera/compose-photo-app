@@ -1,4 +1,4 @@
-package com.roberrera.resytakehome.testutils
+package com.roberrera.composephotoapp.testutils
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestDispatcher

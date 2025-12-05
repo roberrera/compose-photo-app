@@ -1,8 +1,8 @@
-package com.roberrera.resytakehome.testutils
+package com.roberrera.composephotoapp.testutils
 
-import com.roberrera.resytakehome.network.ApiService
-import com.roberrera.resytakehome.network.NoConnectivityException
-import com.roberrera.resytakehome.network.Photo
+import com.roberrera.composephotoapp.network.ApiService
+import com.roberrera.composephotoapp.network.NoConnectivityException
+import com.roberrera.composephotoapp.network.Photo
 import okhttp3.ResponseBody
 import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Response

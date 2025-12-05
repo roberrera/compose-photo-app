@@ -1,4 +1,4 @@
-package com.roberrera.resytakehome.ui
+package com.roberrera.composephotoapp.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -31,10 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.roberrera.resytakehome.R
-import com.roberrera.resytakehome.model.ImageLoaderInterface
-import com.roberrera.resytakehome.model.ImageLoaderInterfaceViewModel
-import com.roberrera.resytakehome.model.PhotosViewModel
+import com.roberrera.composephotoapp.R
+import com.roberrera.composephotoapp.model.ImageLoaderInterface
+import com.roberrera.composephotoapp.model.ImageLoaderInterfaceViewModel
+import com.roberrera.composephotoapp.model.PhotosViewModel
 
 private sealed class ImageLoadState {
     object Loading : ImageLoadState()

@@ -1,8 +1,8 @@
-package com.roberrera.resytakehome.model
+package com.roberrera.composephotoapp.model
 
 import android.util.Log
-import com.roberrera.resytakehome.network.ApiService
-import com.roberrera.resytakehome.network.Photo
+import com.roberrera.composephotoapp.network.ApiService
+import com.roberrera.composephotoapp.network.Photo
 import javax.inject.Inject
 
 class PhotoRepository @Inject constructor(private val apiClient: ApiService) {

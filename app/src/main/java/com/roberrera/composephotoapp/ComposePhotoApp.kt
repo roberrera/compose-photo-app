@@ -1,7 +1,7 @@
-package com.roberrera.resytakehome
+package com.roberrera.composephotoapp
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class ResyTakeHomeApp: Application()
+class ComposePhotoApp: Application()

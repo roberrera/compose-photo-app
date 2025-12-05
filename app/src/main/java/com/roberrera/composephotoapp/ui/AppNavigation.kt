@@ -1,4 +1,4 @@
-package com.roberrera.resytakehome.ui
+package com.roberrera.composephotoapp.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 
 @Composable
-fun ResyTakeHomeNavigation(
+fun ComposephotoappNavigation(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {

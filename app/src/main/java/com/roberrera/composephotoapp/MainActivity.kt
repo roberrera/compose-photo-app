@@ -1,4 +1,4 @@
-package com.roberrera.resytakehome
+package com.roberrera.composephotoapp
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -19,8 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.roberrera.resytakehome.ui.ResyTakeHomeNavigation
-import com.roberrera.resytakehome.ui.theme.ResyTakeHomeTheme
+import com.roberrera.composephotoapp.ui.ComposephotoappNavigation
+import com.roberrera.composephotoapp.ui.theme.ComposephotoappTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            ResyTakeHomeTheme {
+            ComposephotoappTheme {
                 val navController = rememberNavController()
                 val backStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = backStackEntry?.destination?.route
@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) { innerPadding ->
-                    ResyTakeHomeNavigation(
+                    ComposephotoappNavigation(
                         navController = navController,
                         modifier = Modifier.padding(innerPadding)
                     )

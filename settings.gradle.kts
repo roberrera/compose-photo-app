@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Resy Take Home"
+rootProject.name = "Compose Photo App"
 include(":app")
  

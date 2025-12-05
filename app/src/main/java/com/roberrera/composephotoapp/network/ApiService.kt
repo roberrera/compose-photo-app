@@ -1,4 +1,4 @@
-package com.roberrera.resytakehome.network
+package com.roberrera.composephotoapp.network
 
 import okhttp3.ResponseBody
 import retrofit2.Response

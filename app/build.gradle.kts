@@ -8,13 +8,13 @@ plugins {
 }
 
 android {
-    namespace = "com.roberrera.resytakehome"
+    namespace = "com.roberrera.composephotoapp"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.roberrera.resytakehome"
+        applicationId = "com.roberrera.composephotoapp"
         minSdk = 33
         targetSdk = 36
         versionCode = 1

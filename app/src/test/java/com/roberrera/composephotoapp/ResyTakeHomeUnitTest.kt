@@ -1,12 +1,12 @@
-package com.roberrera.resytakehome
+package com.roberrera.composephotoapp
 
 import androidx.compose.ui.Alignment
-import com.roberrera.resytakehome.model.PhotoRepository
-import com.roberrera.resytakehome.model.PhotosViewModel
-import com.roberrera.resytakehome.network.Photo
-import com.roberrera.resytakehome.testutils.MainDispatcherRule
-import com.roberrera.resytakehome.testutils.failingApiService
-import com.roberrera.resytakehome.testutils.successApiService
+import com.roberrera.composephotoapp.model.PhotoRepository
+import com.roberrera.composephotoapp.model.PhotosViewModel
+import com.roberrera.composephotoapp.network.Photo
+import com.roberrera.composephotoapp.testutils.MainDispatcherRule
+import com.roberrera.composephotoapp.testutils.failingApiService
+import com.roberrera.composephotoapp.testutils.successApiService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -17,7 +17,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ResyTakeHomeUnitTest {
+class ComposephotoappUnitTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()

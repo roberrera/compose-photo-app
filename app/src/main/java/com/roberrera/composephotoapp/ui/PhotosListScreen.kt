@@ -1,4 +1,4 @@
-package com.roberrera.resytakehome.ui
+package com.roberrera.composephotoapp.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,8 +26,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.roberrera.resytakehome.model.PhotosViewModel
-import com.roberrera.resytakehome.network.Photo
+import com.roberrera.composephotoapp.model.PhotosViewModel
+import com.roberrera.composephotoapp.network.Photo
 
 @Composable
 fun PhotosListScreen(onPhotoClick: (Photo) -> Unit) {
@@ -37,7 +36,6 @@ fun PhotosListScreen(onPhotoClick: (Photo) -> Unit) {
     val photos by photosViewModel.photos.collectAsState()
     val isLoading by photosViewModel.isLoading.collectAsState()
     val apiError by photosViewModel.error.collectAsState()
-    val scrollState = rememberLazyListState()
     val context = LocalContext.current
 
     LaunchedEffect(true) {
@@ -69,8 +67,7 @@ fun PhotosListScreen(onPhotoClick: (Photo) -> Unit) {
         else -> {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                state = scrollState
+                contentPadding = PaddingValues(16.dp)
             ) {
                 items(items = photos ?: emptyList()) { photo ->
                     photo?.let { PhotoRow(photo = it, onPhotoClick = { onPhotoClick(it) }) }

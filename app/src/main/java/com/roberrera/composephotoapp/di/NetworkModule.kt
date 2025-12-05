@@ -1,8 +1,8 @@
-package com.roberrera.resytakehome.di
+package com.roberrera.composephotoapp.di
 
 import android.content.Context
-import com.roberrera.resytakehome.network.ApiService
-import com.roberrera.resytakehome.network.NetworkConnectionInterceptor
+import com.roberrera.composephotoapp.network.ApiService
+import com.roberrera.composephotoapp.network.NetworkConnectionInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

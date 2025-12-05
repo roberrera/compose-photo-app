@@ -1,4 +1,4 @@
-package com.roberrera.resytakehome.ui.theme
+package com.roberrera.composephotoapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

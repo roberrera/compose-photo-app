@@ -1,4 +1,4 @@
-package com.roberrera.resytakehome.network
+package com.roberrera.composephotoapp.network
 
 import android.content.Context
 import android.net.ConnectivityManager

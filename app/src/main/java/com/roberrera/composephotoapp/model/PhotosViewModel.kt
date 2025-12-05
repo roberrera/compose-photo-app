@@ -1,9 +1,9 @@
-package com.roberrera.resytakehome.model
+package com.roberrera.composephotoapp.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.roberrera.resytakehome.network.NoConnectivityException
-import com.roberrera.resytakehome.network.Photo
+import com.roberrera.composephotoapp.network.NoConnectivityException
+import com.roberrera.composephotoapp.network.Photo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

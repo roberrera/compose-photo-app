@@ -1,4 +1,4 @@
-package com.roberrera.resytakehome.model
+package com.roberrera.composephotoapp.model
 
 import android.app.Application
 import android.graphics.Bitmap
